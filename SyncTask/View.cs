@@ -35,6 +35,17 @@ namespace SyncTask
             // display error message in console
             Console.WriteLine(errorMsg);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void WelcomeMessage()
+        {
+            Console.WriteLine("Welcome to Sync Console APP. \n" +
+            "Read and select the following options");
+        }
+
+
     }
 
 

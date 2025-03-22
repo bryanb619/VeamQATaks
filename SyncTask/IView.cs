@@ -10,6 +10,11 @@ namespace SyncTask
         /// <summary>
         /// 
         /// </summary>
+        void WelcomeMessage();
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="msg"></param>
         void LineMessage(string msg);
 
