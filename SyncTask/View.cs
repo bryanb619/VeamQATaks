@@ -34,6 +34,8 @@ namespace SyncTask
         {
             // display error message in console
             Console.WriteLine(errorMsg);
+
+            Console.WriteLine("Program will now terminate");
         }
 
         /// <summary>
@@ -41,8 +43,7 @@ namespace SyncTask
         /// </summary>
         public void WelcomeMessage()
         {
-            Console.WriteLine("Welcome to Sync Console APP. \n" +
-            "Read and select the following options");
+            Console.WriteLine("Welcome to Sync Console APP");
         }
 
 
