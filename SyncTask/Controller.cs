@@ -31,18 +31,42 @@ namespace SyncTask
         /// <summary>
         /// 
         /// </summary>
-        public void Start()
+        public void Start(string[] args)
         {
-
-            if (_model is null)
-            {
-                _view.ErrorMesage("Model is invalid");
-            }
+            // local variables to hold arg values
+            string folderPath = "", clonePath = "", logPath;
+            int interval;
 
             // display welcome message
             _view.WelcomeMessage();
 
+            // Check if there are enough arguments
+            if (args.Length < 4)
+            {
+                // display error message to user
+                _view.ErrorMesage("the ammount or args passed was not enough.");
+
+                // terminate
+                return;
+            }
+
+            try
+            {
+
+                folderPath = args[0];
+                clonePath = args[1];
+                interval = int.Parse(args[2]);
+                logPath = args[3];
+            }
+
+            catch
+            {
+
+            }
+
             // display options menu for cloning
+
+            _model.replicateFolder(folderPath, clonePath);
 
 
 
