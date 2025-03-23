@@ -13,11 +13,12 @@ namespace SyncTask
         /// <param name="args">Set of arguments to be passed in console</param>
         private static void Main(string[] args)
         {
-            // new Model
-            Model model = new Model();
 
             // New abstract IView as concrete View
             IView view = new View();
+
+            // new Model
+            Model model = new Model(view);
 
             // new Controller
             // accepts a model and a view

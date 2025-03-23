@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SyncTask
 {
@@ -31,6 +28,7 @@ namespace SyncTask
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="args"></param>
         public void Start(string[] args)
         {
             // local variables to hold arg values
@@ -44,7 +42,18 @@ namespace SyncTask
             if (args.Length < 4)
             {
                 // display error message to user
-                _view.ErrorMesage("the ammount or args passed was not enough.");
+                _view.ErrorMesage("the ammount or args passed was not enough."
+                    + $"You passed {args.Length} arguments");
+
+                // terminate
+                return;
+            }
+
+            else if (args.Length > 4)
+            {
+                // display error message to user
+                _view.ErrorMesage("the ammount or args passed was too much."
+                    + $"You passed {args.Length} arguments");
 
                 // terminate
                 return;
@@ -59,17 +68,14 @@ namespace SyncTask
                 logPath = args[3];
             }
 
-            catch
+            catch (Exception e)
             {
-
+                _view.ErrorMesage(e.Message);
             }
 
-            // display options menu for cloning
 
+            //
             _model.replicateFolder(folderPath, clonePath);
-
-
-
         }
 
     }
