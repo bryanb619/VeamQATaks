@@ -1,5 +1,6 @@
 using System;
 
+
 namespace SyncTask
 {
     public class View : IView
@@ -29,13 +30,32 @@ namespace SyncTask
             Console.WriteLine(msg);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="color"></param>
+        public void Message(string msg, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+
+            Console.WriteLine(msg);
+
+            Console.ResetColor();
+        }
+
 
         public void ErrorMesage(string errorMsg)
         {
-            // display error message in console
-            Console.WriteLine(errorMsg);
 
-            Console.WriteLine("Program will now terminate");
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            // display error message in console
+            Console.WriteLine(errorMsg + "\n");
+
+            Console.ResetColor();
+
+            Console.WriteLine("Program will now terminate...\n\n");
         }
 
         /// <summary>
@@ -43,10 +63,17 @@ namespace SyncTask
         /// </summary>
         public void WelcomeMessage()
         {
-            Console.WriteLine("Welcome to Sync Console APP");
+            Console.ForegroundColor = ConsoleColor.Green;
+
+            Console.WriteLine("\nWelcome to Sync Console APP!\n");
+
+            Console.ResetColor();
+
+            Console.WriteLine("Consult the README file placed in the root of the project\n"
+                + "for further information.\n\n");
         }
 
-
+        public ConsoleKey GetKey() => Console.ReadKey().Key;
     }
 
 
