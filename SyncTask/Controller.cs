@@ -38,6 +38,8 @@ namespace SyncTask
             string folderPath = "", clonePath = "", logPath = "";
             int interval = 0;
 
+            bool exit = false;
+
             // display welcome message
             _view.WelcomeMessage();
 
@@ -77,8 +79,35 @@ namespace SyncTask
             }
 
 
-            // Set sync interval
-            _model.CloneFolder(folderPath, clonePath, interval, logPath);
+            do
+            {
+                _model.CloneFolder(folderPath, clonePath, interval, logPath);
+
+                for (int i = 0; i < interval; i++)
+                {
+
+                    if (Console.KeyAvailable)
+                    {
+                        ConsoleKeyInfo key = Console.ReadKey(true);
+
+                        if (key.Key == ConsoleKey.Enter)
+                        {
+                            exit = true;
+                            break;
+                        }
+                    }
+
+                    _view.Message($"{interval - i} ");
+
+                    System.Threading.Thread.Sleep(1000);
+                }
+
+
+            }
+
+            while (!exit);
+
+            _view.Message("Thanks for using Sync Task...");
         }
 
     }
