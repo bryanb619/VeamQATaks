@@ -33,8 +33,5 @@ namespace SyncTask
         /// </summary>
         /// <param name="errorMsg"></param>
         void ErrorMesage(string errorMsg);
-
-        ConsoleKey GetKey();
-
     }
 }

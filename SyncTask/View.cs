@@ -69,11 +69,13 @@ namespace SyncTask
 
             Console.ResetColor();
 
-            Console.WriteLine("Consult the README file placed in the root of the project\n"
-                + "for further information.\n\n");
+            Console.WriteLine(
+                "Pres enter to pause!"
+                + "\nConsult the README file placed in the root of the project"
+                + " for further information.\n\n");
         }
 
-        public ConsoleKey GetKey() => Console.ReadKey().Key;
+
     }
 
 

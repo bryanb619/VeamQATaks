@@ -15,7 +15,7 @@ dotnet build
 - command example Nº1:
 
 ```sh
-dotnet run --project SyncTask -- "C:\Users\steve\Desktop\SourceFolder" "C:\Users\steve\Desktop\CloneFolder" 10 "C:\Users\steve\Desktop\LogOutput\log.txt"
+dotnet run --project SyncTask -- "C:\Users\steve\Desktop\SourceFolder" "C:\Users\steve\Desktop\CloneFolder" 3 "C:\Users\steve\Desktop\LogOutput\log.txt"
 ```
 
 - command example Nº2:
@@ -23,7 +23,7 @@ dotnet run --project SyncTask -- "C:\Users\steve\Desktop\SourceFolder" "C:\Users
 Inside the project folder run the following command:
 
 ```sh
-dotnet run -- "C:\Users\steve\Desktop\SourceFolder" "C:\Users\steve\Desktop\CloneFolder" 10 "C:\Users\steve\Desktop\LogOutput\log.txt"
+dotnet run -- "C:\Users\steve\Desktop\SourceFolder" "C:\Users\steve\Desktop\CloneFolder" 3 "C:\Users\steve\Desktop\LogOutput\log.txt"
 ```
 
 ### UML Solution
