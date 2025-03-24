@@ -17,11 +17,14 @@ namespace SyncTask
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="model">Reference to be passed for the model class
-        /// </param>
+        /// <param name="model"></param>
+        /// <param name="view"></param>
         public Controller(Model model, IView view)
         {
+            // set the model class
             _model = model;
+
+            // set the view class
             _view = view;
         }
 
@@ -32,8 +35,8 @@ namespace SyncTask
         public void Start(string[] args)
         {
             // local variables to hold arg values
-            string folderPath = "", clonePath = "", logPath;
-            int interval;
+            string folderPath = "", clonePath = "", logPath = "";
+            int interval = 0;
 
             // display welcome message
             _view.WelcomeMessage();
@@ -42,8 +45,8 @@ namespace SyncTask
             if (args.Length < 4)
             {
                 // display error message to user
-                _view.ErrorMesage("the ammount or args passed was not enough."
-                    + $"You passed {args.Length} arguments");
+                _view.ErrorMesage("the ammount of arguments passed was not enough."
+                    + $"You've passed {args.Length} arguments");
 
                 // terminate
                 return;
@@ -52,8 +55,8 @@ namespace SyncTask
             else if (args.Length > 4)
             {
                 // display error message to user
-                _view.ErrorMesage("the ammount or args passed was too much."
-                    + $"You passed {args.Length} arguments");
+                _view.ErrorMesage("the ammount or arguments passed was too much."
+                    + $"You've passed {args.Length} arguments");
 
                 // terminate
                 return;
@@ -74,8 +77,8 @@ namespace SyncTask
             }
 
 
-            //
-            _model.replicateFolder(folderPath, clonePath);
+            // Set sync interval
+            _model.CloneFolder(folderPath, clonePath, interval, logPath);
         }
 
     }

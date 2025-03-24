@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SyncTask
+﻿namespace SyncTask
 {
     /// <summary>
     /// Class defines root of C# program
