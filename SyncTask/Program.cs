@@ -6,7 +6,8 @@
     public class Program
     {
         /// <summary>
-        /// 
+        /// Starting point of the program.
+        /// Like Main in Python! 
         /// </summary>
         /// <param name="args">Set of arguments to be passed in console</param>
         private static void Main(string[] args)

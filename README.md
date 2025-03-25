@@ -1,10 +1,10 @@
 # VEEAM QA exercise
 
-Author of solution:
+## Author of solution
 
-- Steven Hall
+Steven Hall
 
-## How to run the project?
+### How to run the project?
 
 The first command after cloning/downloading should be dotnet build as some necessary files are ignored by .gitignore file.
 
@@ -26,7 +26,7 @@ Inside the project folder run the following command:
 dotnet run -- "C:\Users\steve\Desktop\SourceFolder" "C:\Users\steve\Desktop\CloneFolder" 3 "C:\Users\steve\Desktop\LogOutput\log.txt"
 ```
 
-### UML
+## Simple UML
 
 ```mermaid
 
@@ -51,7 +51,7 @@ class IFileHandler
 
 ```
 
-#### Code
+## Code main points
 
 _Program_ Initializes MVC classes and starts the c# program.
 
@@ -80,5 +80,8 @@ If previous operations are sucessfull, the class is called and Syncronization be
 
 ```csharp
 _fileHandler.CloneFolder(folderPath, clonePath, logPath);
+```
 
+```csharp
+_fileHandler.CloneFolder(folderPath, clonePath, logPath);
 ```
