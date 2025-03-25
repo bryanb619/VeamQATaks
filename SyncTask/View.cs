@@ -75,8 +75,21 @@ namespace SyncTask
                 + " for further information.\n\n");
         }
 
+        public bool GetEscKey()
+        {
+            if (Console.KeyAvailable)
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
 
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    return true;
+                }
+
+                else return false;
+            }
+
+            else return false;
+        }
     }
-
-
 }

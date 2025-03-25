@@ -38,8 +38,6 @@ namespace SyncTask
             string folderPath = "", clonePath = "", logPath = "";
             int interval = 0;
 
-            bool exit = false;
-
             // display welcome message
             _view.WelcomeMessage();
 
@@ -86,16 +84,7 @@ namespace SyncTask
                 for (int i = 0; i < interval; i++)
                 {
 
-                    if (Console.KeyAvailable)
-                    {
-                        ConsoleKeyInfo key = Console.ReadKey(true);
 
-                        if (key.Key == ConsoleKey.Enter)
-                        {
-                            exit = true;
-                            break;
-                        }
-                    }
 
                     _view.Message($"{interval - i} ");
 
@@ -105,9 +94,9 @@ namespace SyncTask
 
             }
 
-            while (!exit);
+            while (!_view.GetEscKey());
 
-            _view.Message("Thanks for using Sync Task...");
+            _view.Message("\nThanks for using Sync Task...");
         }
 
     }

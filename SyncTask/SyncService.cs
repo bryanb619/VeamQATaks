@@ -1,31 +1,41 @@
 using System;
 using System.IO;
-using System.Text;
-
 
 namespace SyncTask
 {
-    public class Model
+
+    /// <summary>
+    /// Main class of program logic & data flow.
+    /// SyncService class is responsible for the synchronization of files and 
+    /// directories. 
+    /// </summary>
+    public class SyncService
     {
         /// <summary>
-        /// Reference to the view
+        /// Reference to the view.
+        /// Use ref to display messages to the user. 
         /// </summary>
         private readonly IView _view;
 
         /// <summary>
-        /// 
+        /// Reference to logger. 
+        /// Use class to add info to the log and write log file
         /// </summary>
-        private readonly StringBuilder _sb;
+        private readonly Logger _logger;
+
 
         /// <summary>
-        /// 
+        /// Public constructor of sync service.
+        /// Initializes the view and logger
         /// </summary>
-        /// <param name="view"></param>
-        public Model(IView view)
+        /// <param name="view">reference of view to be received</param>
+        public SyncService(IView view)
         {
+            // initialize view with given reference
             _view = view;
 
-            _sb = new StringBuilder();
+            // initialize logger with given view reference
+            _logger = new Logger(_view);
         }
 
         /// <summary>
@@ -36,7 +46,7 @@ namespace SyncTask
         /// <param name="interval"></param>
         /// <param name="logTextPath"></param>
         public void CloneFolder(string sourcePath, string destFolder,
-            int interval, string logTextPath)
+            string logTextPath)
         {
 
             // Create destination folder directory
@@ -58,7 +68,7 @@ namespace SyncTask
                     // Any file will be overwritten!
                     File.Copy(filePath, destFilePath, true);
 
-                    AddLog($"{fileName} copied to {destFilePath}",
+                    _logger.AddLog($"{fileName} copied to {destFilePath}",
                         ConsoleColor.Green);
 
                 }
@@ -93,7 +103,7 @@ namespace SyncTask
                         // delete directory with given path
                         Directory.Delete(subDirPath, true);
 
-                        AddLog($"{dirName} deleted from {subDirPath}",
+                        _logger.AddLog($"{dirName} deleted from {subDirPath}",
                             ConsoleColor.Red);
                     }
 
@@ -107,9 +117,14 @@ namespace SyncTask
 
             }
 
-            WriteLogFile(logTextPath);
+            _logger.WriteLogFile(logTextPath);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destFolder"></param>
         private void SubFolderClone(string sourcePath, string destFolder)
         {
             // Copy all subdirectories recursively
@@ -123,7 +138,7 @@ namespace SyncTask
                 // Create the destination subfolder
                 Directory.CreateDirectory(destSubFolderPath);
 
-                AddLog($"{folderName} copied to {destSubFolderPath}",
+                _logger.AddLog($"{folderName} copied to {destSubFolderPath}",
                     ConsoleColor.Green);
 
                 // Recursively call itselft until no sub folder is left
@@ -144,7 +159,7 @@ namespace SyncTask
                     // Copy the file, overwriting if it exists
                     File.Copy(filePath, destFilePath, true);
 
-                    AddLog($"{fileName} copied to {destFilePath}",
+                    _logger.AddLog($"{fileName} copied to {destFilePath}",
                         ConsoleColor.Green);
 
                 }
@@ -156,6 +171,11 @@ namespace SyncTask
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="destFolder"></param>
+        /// <param name="sourcePath"></param>
         private void RemoveClonedFile(string destFolder, string sourcePath)
         {
             // Remove files and directories not in the source
@@ -173,7 +193,7 @@ namespace SyncTask
                         // delete file with given path
                         File.Delete(filePath);
 
-                        AddLog($"{fileName} deleted from {filePath}",
+                        _logger.AddLog($"{fileName} deleted from {filePath}",
                             ConsoleColor.Red);
                     }
                 }
@@ -186,7 +206,11 @@ namespace SyncTask
 
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="destFolder"></param>
+        /// <param name="sourcePath"></param>
         private void RemoveClonedDirectories(string destFolder, string sourcePath)
         {
             foreach (string subDirPath in Directory.GetDirectories(destFolder))
@@ -206,7 +230,8 @@ namespace SyncTask
                         Directory.Delete(subDirPath, true);
 
 
-                        AddLog($"Directory: {dirName} deleted from: {subDirPath}",
+                        _logger.AddLog(
+                            $"Directory: {dirName} deleted from: {subDirPath}",
                             ConsoleColor.Red);
 
 
@@ -219,42 +244,12 @@ namespace SyncTask
                 }
                 catch (IOException e)
                 {
-                    _view.ErrorMesage($"Error deleting directory {subDirPath}: {e.Message}");
+                    _view.ErrorMesage(
+                        $"Error deleting directory {subDirPath}: {e.Message}");
                 }
             }
         }
 
-
-        private void AddLog(string logText, ConsoleColor color)
-        {
-            _view.Message(logText, color);
-
-            _sb.AppendLine(logText + "\n");
-        }
-
-        private void WriteLogFile(string path)
-        {
-            try
-            {
-
-                string directory = Path.GetDirectoryName(path);
-
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                using StreamWriter sw = new StreamWriter(path);
-                sw.Write(_sb.ToString());
-
-                _view.Message($"Log file created at {path}",
-                    System.ConsoleColor.Green);
-            }
-
-            catch (IOException e)
-            {
-                _view.ErrorMesage(e.Message);
-            }
-        }
     }
+
 }
