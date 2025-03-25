@@ -39,15 +39,34 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
+        /// Starting point SyncService class.
+        /// Method to clone a folder from source to destination.
+        /// In case of necessary, it will create the destination folder.
+        /// It will also remove files and directories not in the source.
+        /// It will log all operations to a log file.
         /// </summary>
-        /// <param name="sourcePath"></param>
-        /// <param name="destFolder"></param>
-        /// <param name="interval"></param>
-        /// <param name="logTextPath"></param>
+        /// <param name="sourcePath">Source folder path</param>
+        /// <param name="destFolder">Destination folder path</param>
+        /// <param name="logTextPath">Log folder path</param>
         public void CloneFolder(string sourcePath, string destFolder,
             string logTextPath)
         {
+            // Reset log file
+            _logger.ResetLog();
+
+            // check if source directory exists
+            if (!Directory.Exists(sourcePath))
+            {
+                // Display error message
+                LogInfo($"Source directory {sourcePath} does not exist",
+                    ConsoleColor.Red);
+
+                // Write log file
+                _logger.WriteLogFile(logTextPath);
+
+                // return
+                return;
+            }
 
             // Create destination folder directory
             Directory.CreateDirectory(destFolder);
@@ -70,8 +89,7 @@ namespace SyncTask
                     File.Copy(filePath, destFilePath, true);
 
                     // Display message to user
-                    LogInfo($"{fileName} copied to {destFilePath}",
-                        ConsoleColor.Green);
+                    LogInfo($"File: {fileName} copied to {destFilePath}");
 
                 }
 
@@ -82,17 +100,14 @@ namespace SyncTask
                     LogInfo($"Error copying file: {e.Message}",
                         ConsoleColor.Red);
                 }
-            }
 
-            // check source
-            //CheckSource(sourcePath, destFolder);
+            }
 
             // Copy all subdirectories recursively
             SubFolderClone(sourcePath, destFolder);
 
-            // Remove files and directories not in the source
+            // Remove files not in the source
             RemoveClonedFile(destFolder, sourcePath);
-
 
             // Remove directories not in the source
             RemoveClonedDirectories(destFolder, sourcePath);
@@ -101,45 +116,8 @@ namespace SyncTask
             _logger.WriteLogFile(logTextPath);
         }
 
-
-
-        private void CheckSource(string sourcePath, string destFolder)
-        {
-            // Remove directories not in the source
-            foreach (string subDirPath in Directory.GetDirectories(destFolder))
-            {
-
-                try
-                {
-                    // Get directory name
-                    string dirName = Path.GetFileName(subDirPath);
-
-                    // If directory does not exist in source, delete it!
-                    if (!Directory.Exists(Path.Combine(sourcePath, dirName)))
-                    {
-                        // delete directory with given path
-                        Directory.Delete(subDirPath, true);
-
-                        // log info
-                        LogInfo($"{dirName} deleted from {subDirPath}",
-                            ConsoleColor.Red);
-                    }
-                }
-
-                catch (IOException e)
-                {
-                    // log error message
-                    LogInfo(
-                        $"Error deleting directory {subDirPath}: {e.Message}",
-                        ConsoleColor.Red);
-                }
-
-            }
-
-        }
-
         /// <summary>
-        /// 
+        /// Method to clone subfolders recursively
         /// </summary>
         /// <param name="sourcePath"></param>
         /// <param name="destFolder"></param>
@@ -156,8 +134,8 @@ namespace SyncTask
                 // Create the destination subfolder
                 Directory.CreateDirectory(destSubFolderPath);
 
-                LogInfo($"{folderName} copied to {destSubFolderPath}",
-                    ConsoleColor.Green);
+                LogInfo($"Directory: {folderName} copied to {destSubFolderPath}",
+                    ConsoleColor.Yellow);
 
                 // Recursively call itselft until no sub folder is left
                 SubFolderClone(subFolderPath, destSubFolderPath);
@@ -177,7 +155,7 @@ namespace SyncTask
                     // Copy the file, overwriting if it exists
                     File.Copy(filePath, destFilePath, true);
 
-                    LogInfo($"{fileName} copied to {destFilePath}",
+                    LogInfo($"File: {fileName} copied to {destFilePath}",
                         ConsoleColor.Green);
 
                 }
@@ -190,7 +168,7 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
+        /// Method to remove cloned files not in the source
         /// </summary>
         /// <param name="destFolder"></param>
         /// <param name="sourcePath"></param>
@@ -224,6 +202,21 @@ namespace SyncTask
                 }
             }
 
+            // Recursively check subdirectories
+            foreach (string subDirPath in Directory.GetDirectories(destFolder))
+            {
+                string subDir = Path.GetFileName(subDirPath);
+
+                string correspondingSourceSubDir =
+                    Path.Combine(sourcePath, subDir);
+
+                // If the subdirectory exists in the source, process its files
+                if (Directory.Exists(correspondingSourceSubDir))
+                {
+                    // call itself recursively
+                    RemoveClonedFile(subDirPath, correspondingSourceSubDir);
+                }
+            }
         }
 
         /// <summary>
@@ -249,11 +242,10 @@ namespace SyncTask
                         // Delete the directory and its contents
                         Directory.Delete(subDirPath, true);
 
-
+                        // log info
                         LogInfo(
                             $"Directory: {dirName} deleted from: {subDirPath}",
                             ConsoleColor.Red);
-
 
                     }
                     else
@@ -265,6 +257,7 @@ namespace SyncTask
                 catch (IOException e)
                 {
 
+                    // log error message
                     LogInfo(
                         $"Error deleting directory {subDirPath}: {e.Message}",
                         ConsoleColor.Red);
@@ -272,13 +265,25 @@ namespace SyncTask
             }
         }
 
+        /// <summary>
+        /// Override Method Nº1 used to log info to the console with given text color
+        /// </summary>
+        /// <param name="logText">Text to be logged</param>
+        /// <param name="color">color to be set in console</param>
         private void LogInfo(string logText, ConsoleColor color)
         {
+            // call logger method to add log with given text and color
             _logger.AddLog(logText, color);
         }
 
+
+        /// <summary>
+        /// Override Method Nº2 used to log info to the console with given text
+        /// </summary>
+        /// <param name="logText">Text to be logged</param>
         private void LogInfo(string logText)
         {
+            // call logger method to add log with given text
             _logger.AddLog(logText);
         }
 
