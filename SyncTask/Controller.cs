@@ -2,6 +2,10 @@ using System;
 
 namespace SyncTask
 {
+    /// <summary>
+    /// Controls logic of program while interacting with the model and view classes.
+    /// Checks if the arguments passed are valid and then starts the program.
+    /// </summary>
     public class Controller
     {
         /// <summary>
@@ -10,7 +14,7 @@ namespace SyncTask
         private readonly IFileHandler _fileHandler;
 
         /// <summary>
-        /// 
+        /// Instance variable to reference view class
         /// </summary>
         private readonly IView _view;
 
@@ -29,9 +33,9 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
+        /// Starts the program by checking if the arguments passed are valid.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="args">Arguments passed in the console</param>
         public void Start(string[] args)
         {
             // local variables to hold arg values
@@ -45,7 +49,8 @@ namespace SyncTask
             if (args.Length < 4)
             {
                 // display error message to user
-                _view.ErrorMesage("the ammount of arguments passed was not enough."
+                _view.ErrorMesage(
+                    "the ammount of arguments passed was not enough."
                     + $"You've passed {args.Length} arguments");
 
                 // terminate
@@ -55,7 +60,8 @@ namespace SyncTask
             else if (args.Length > 4)
             {
                 // display error message to user
-                _view.ErrorMesage("the ammount or arguments passed was too much."
+                _view.ErrorMesage(
+                    "the ammount or arguments passed was too much."
                     + $"You've passed {args.Length} arguments");
 
                 // terminate
@@ -64,16 +70,25 @@ namespace SyncTask
 
             try
             {
+                // set the values of the arguments
 
+                // source folder path
                 folderPath = args[0];
+
+                // destination folder path
                 clonePath = args[1];
+
+                // interval of sync task
                 interval = int.Parse(args[2]);
+
+                // log file path
                 logPath = args[3];
 
                 // check if interval is a positive number
                 if (interval < 0)
                 {
-                    _view.ErrorMesage("\nInterval must be a positive number\n");
+                    _view.ErrorMesage("\nInterval must be a positive number!\n"
+                        + $"You've passed {interval} as interval of sync time...");
                     return;
                 }
 
@@ -85,23 +100,31 @@ namespace SyncTask
                 _view.ErrorMesage(e.Message);
             }
 
-
+            // while loop
             do
             {
+                _view.Message("\n\nPress ENTER to exit\n\n", ConsoleColor.Gray);
+
+                // Clone folder
                 _fileHandler.CloneFolder(folderPath, clonePath, logPath);
 
+                // loop iwth interval
                 for (int i = 0; i < interval; i++)
                 {
-                    _view.Message($"{interval - i} ");
+                    // display timer to user
+                    _view.Message($"{interval - i}");
 
+                    // wait for 1 second
                     System.Threading.Thread.Sleep(1000);
                 }
 
             }
-
+            // check if user pressed escape key (enter key)
+            // if so, terminate the loop
             while (!_view.GetEscKey());
 
-            _view.Message("\nThanks for using Sync Task...");
+            // display final message to user
+            _view.Message("\n\nThanks for using Sync Task!");
         }
 
     }
