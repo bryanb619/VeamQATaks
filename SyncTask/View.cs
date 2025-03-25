@@ -1,8 +1,12 @@
 using System;
 
-
 namespace SyncTask
 {
+
+    /// <summary>
+    /// Contains UI Logic for the application.
+    /// Defines all methods that the view should implement from IView interface.
+    /// </summary>
     public class View : IView
     {
 
@@ -31,10 +35,10 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
+        /// Displays a message with a specific color
         /// </summary>
-        /// <param name="msg"></param>
-        /// <param name="color"></param>
+        /// <param name="msg">text to be displayed</param>
+        /// <param name="color">color of text</param>
         public void Message(string msg, ConsoleColor color)
         {
             // set text color to given color
@@ -46,7 +50,11 @@ namespace SyncTask
             Console.ResetColor();
         }
 
-
+        /// <summary>
+        /// Displays a error message.
+        /// Color of text is red by default
+        /// </summary>
+        /// <param name="errorMsg">text of error</param>
         public void ErrorMesage(string errorMsg)
         {
             // set text color to red
@@ -63,7 +71,7 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
+        /// Displays the welcome message
         /// </summary>
         public void WelcomeMessage()
         {
@@ -84,8 +92,10 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
-        /// </summary>
+        /// Method to get the user input.
+        /// Waits for the user to press enter returning true if so.
+        /// Else returns false even if the user presses any key.
+        /// </summary>  
         /// <returns>returns state of key press in bool form</returns>
         public bool GetEscKey()
         {
