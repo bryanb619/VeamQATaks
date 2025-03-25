@@ -7,7 +7,7 @@ namespace SyncTask
         /// <summary>
         /// Reference to model class
         /// </summary>
-        private readonly Model _model;
+        private readonly IFileHandler _fileHandler;
 
         /// <summary>
         /// 
@@ -19,10 +19,10 @@ namespace SyncTask
         /// </summary>
         /// <param name="model"></param>
         /// <param name="view"></param>
-        public Controller(Model model, IView view)
+        public Controller(IFileHandler fileHandler, IView view)
         {
             // set the model class
-            _model = model;
+            _fileHandler = fileHandler;
 
             // set the view class
             _view = view;
@@ -69,6 +69,15 @@ namespace SyncTask
                 clonePath = args[1];
                 interval = int.Parse(args[2]);
                 logPath = args[3];
+
+                // check if interval is a positive number
+                if (interval < 0)
+                {
+                    _view.ErrorMesage("\nInterval must be a positive number\n");
+                    return;
+                }
+
+
             }
 
             catch (Exception e)
@@ -79,18 +88,14 @@ namespace SyncTask
 
             do
             {
-                _model.CloneFolder(folderPath, clonePath, interval, logPath);
+                _fileHandler.CloneFolder(folderPath, clonePath, logPath);
 
                 for (int i = 0; i < interval; i++)
                 {
-
-
-
                     _view.Message($"{interval - i} ");
 
                     System.Threading.Thread.Sleep(1000);
                 }
-
 
             }
 

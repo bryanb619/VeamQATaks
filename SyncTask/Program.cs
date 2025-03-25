@@ -16,7 +16,7 @@
             IView view = new View();
 
             // new Model
-            Model model = new Model(view);
+            IFileHandler model = new SyncService(view);
 
             // new Controller
             // accepts a model and a view

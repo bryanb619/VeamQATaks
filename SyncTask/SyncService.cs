@@ -9,7 +9,7 @@ namespace SyncTask
     /// SyncService class is responsible for the synchronization of files and 
     /// directories. 
     /// </summary>
-    public class SyncService
+    public class SyncService : IFileHandler
     {
         /// <summary>
         /// Reference to the view.
@@ -56,6 +56,7 @@ namespace SyncTask
             // Obtain and copy all files!
             foreach (string filePath in Directory.GetFiles(sourcePath))
             {
+                // Try to copy file to destination
                 try
                 {
                     // Get file name
@@ -68,26 +69,42 @@ namespace SyncTask
                     // Any file will be overwritten!
                     File.Copy(filePath, destFilePath, true);
 
-                    _logger.AddLog($"{fileName} copied to {destFilePath}",
+                    // Display message to user
+                    LogInfo($"{fileName} copied to {destFilePath}",
                         ConsoleColor.Green);
 
                 }
 
+                // catch exception if file cannot be copied
                 catch (IOException e)
                 {
                     // Display error message
-                    _view.ErrorMesage(e.Message);
+                    LogInfo($"Error copying file: {e.Message}",
+                        ConsoleColor.Red);
                 }
             }
 
+            // check source
+            //CheckSource(sourcePath, destFolder);
 
+            // Copy all subdirectories recursively
             SubFolderClone(sourcePath, destFolder);
 
+            // Remove files and directories not in the source
             RemoveClonedFile(destFolder, sourcePath);
 
+
+            // Remove directories not in the source
             RemoveClonedDirectories(destFolder, sourcePath);
 
+            // finalize all operations & write log file to given path
+            _logger.WriteLogFile(logTextPath);
+        }
 
+
+
+        private void CheckSource(string sourcePath, string destFolder)
+        {
             // Remove directories not in the source
             foreach (string subDirPath in Directory.GetDirectories(destFolder))
             {
@@ -103,21 +120,22 @@ namespace SyncTask
                         // delete directory with given path
                         Directory.Delete(subDirPath, true);
 
-                        _logger.AddLog($"{dirName} deleted from {subDirPath}",
+                        // log info
+                        LogInfo($"{dirName} deleted from {subDirPath}",
                             ConsoleColor.Red);
                     }
-
-
                 }
 
                 catch (IOException e)
                 {
-                    _view.ErrorMesage(e.Message);
+                    // log error message
+                    LogInfo(
+                        $"Error deleting directory {subDirPath}: {e.Message}",
+                        ConsoleColor.Red);
                 }
 
             }
 
-            _logger.WriteLogFile(logTextPath);
         }
 
         /// <summary>
@@ -138,7 +156,7 @@ namespace SyncTask
                 // Create the destination subfolder
                 Directory.CreateDirectory(destSubFolderPath);
 
-                _logger.AddLog($"{folderName} copied to {destSubFolderPath}",
+                LogInfo($"{folderName} copied to {destSubFolderPath}",
                     ConsoleColor.Green);
 
                 // Recursively call itselft until no sub folder is left
@@ -159,14 +177,14 @@ namespace SyncTask
                     // Copy the file, overwriting if it exists
                     File.Copy(filePath, destFilePath, true);
 
-                    _logger.AddLog($"{fileName} copied to {destFilePath}",
+                    LogInfo($"{fileName} copied to {destFilePath}",
                         ConsoleColor.Green);
 
                 }
                 catch (IOException e)
                 {
-                    _view.ErrorMesage(
-                        $"Error copying file {filePath}: {e.Message}");
+                    LogInfo($"Error copying file: {e.Message}",
+                        ConsoleColor.Red);
                 }
             }
         }
@@ -193,14 +211,16 @@ namespace SyncTask
                         // delete file with given path
                         File.Delete(filePath);
 
-                        _logger.AddLog($"{fileName} deleted from {filePath}",
+                        LogInfo($"{fileName} deleted from {filePath}",
                             ConsoleColor.Red);
                     }
                 }
 
                 catch (IOException e)
                 {
-                    _view.ErrorMesage(e.Message);
+                    LogInfo(
+                        $"Error deleting file {filePath}: {e.Message}",
+                        ConsoleColor.Red);
                 }
             }
 
@@ -230,7 +250,7 @@ namespace SyncTask
                         Directory.Delete(subDirPath, true);
 
 
-                        _logger.AddLog(
+                        LogInfo(
                             $"Directory: {dirName} deleted from: {subDirPath}",
                             ConsoleColor.Red);
 
@@ -244,10 +264,22 @@ namespace SyncTask
                 }
                 catch (IOException e)
                 {
-                    _view.ErrorMesage(
-                        $"Error deleting directory {subDirPath}: {e.Message}");
+
+                    LogInfo(
+                        $"Error deleting directory {subDirPath}: {e.Message}",
+                        ConsoleColor.Red);
                 }
             }
+        }
+
+        private void LogInfo(string logText, ConsoleColor color)
+        {
+            _logger.AddLog(logText, color);
+        }
+
+        private void LogInfo(string logText)
+        {
+            _logger.AddLog(logText);
         }
 
     }

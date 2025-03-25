@@ -37,24 +37,28 @@ namespace SyncTask
         /// <param name="color"></param>
         public void Message(string msg, ConsoleColor color)
         {
+            // set text color to given color
             Console.ForegroundColor = color;
 
             Console.WriteLine(msg);
 
+            // reset text color to default
             Console.ResetColor();
         }
 
 
         public void ErrorMesage(string errorMsg)
         {
-
+            // set text color to red
             Console.ForegroundColor = ConsoleColor.Red;
 
             // display error message in console
             Console.WriteLine(errorMsg + "\n");
 
+            // reset text color to default
             Console.ResetColor();
 
+            // display final message to user
             Console.WriteLine("Program will now terminate...\n\n");
         }
 
@@ -63,18 +67,26 @@ namespace SyncTask
         /// </summary>
         public void WelcomeMessage()
         {
+            // set text color to green
             Console.ForegroundColor = ConsoleColor.Green;
 
+            // display welcome message to user
             Console.WriteLine("\nWelcome to Sync Console APP!\n");
 
+            // reset text color to default
             Console.ResetColor();
 
+            // display message to user
             Console.WriteLine(
                 "Pres enter to pause!"
                 + "\nConsult the README file placed in the root of the project"
                 + " for further information.\n\n");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>returns state of key press in bool form</returns>
         public bool GetEscKey()
         {
             if (Console.KeyAvailable)

@@ -6,8 +6,14 @@ namespace SyncTask
 {
     public class Logger
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly IView _view;
 
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly StringBuilder _sb;
 
         /// <summary>
@@ -16,16 +22,33 @@ namespace SyncTask
         /// <param name="view"></param>
         public Logger(IView view)
         {
+            // set the view class
             _view = view;
 
+            // initialize string builder
             _sb = new StringBuilder();
         }
 
 
         public void AddLog(string logText, ConsoleColor color)
         {
+            // display message in console
             _view.Message(logText, color);
 
+            UpdateLogText(logText);
+        }
+
+        public void AddLog(string logText)
+        {
+            // display message in console
+            _view.Message(logText);
+
+            UpdateLogText(logText);
+        }
+
+        private void UpdateLogText(string logText)
+        {
+            // add log to string builder
             _sb.AppendLine(logText + "\n");
         }
 
@@ -41,9 +64,12 @@ namespace SyncTask
                     Directory.CreateDirectory(directory);
                 }
 
+                // Create a new file and write the log to it
                 using StreamWriter sw = new StreamWriter(path);
+
                 sw.Write(_sb.ToString());
 
+                // display path of log message in console
                 _view.Message($"Log file created at {path}",
                     ConsoleColor.Green);
             }
