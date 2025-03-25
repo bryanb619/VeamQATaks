@@ -89,9 +89,13 @@ namespace SyncTask
         }
 
         /// <summary>
-        /// 
+        /// Method to write log file
+        /// Creates a log file and writes the log to it.
+        /// If the directory does not exist, it creates it.
+        /// If an exception occurs, it logs the error message to the console.
+        /// If the log file is created successfully, it displays the path of the log file.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">Path of log file</param>
         public void WriteLogFile(string path)
         {
             try
